@@ -28,7 +28,7 @@ const App = () => {
     } else if (activePage === "orders") {
       return <Orders setActivePage={setActivePage} />;
     } else if (activePage === "settings") {
-      return <Settings />;
+      return <Settings setActivePage={setActivePage} />;
     } else {
       return localStorage.getItem("role") === "admin" ? <Home /> : <Login setActivePage={setActivePage} />;
     }

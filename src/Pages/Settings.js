@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-const Settings = () => {
+const Settings = ({ setActivePage }) => {
+  const [restaurantAvailable, setRestaurantAvailable] = useState(true);
+  console.log(restaurantAvailable);
+  const [pincodeDB, setPincodeDB] = useState();
   const userData = async () => {
     const response = await fetch("https://mosho.onrender.com/api/me", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -11,8 +14,20 @@ const Settings = () => {
     localStorage.setItem("role", data.role);
     localStorage.setItem("email", data.email);
   };
+  const fetchPincodes = async () => {
+    const response = await fetch("https://mosho.onrender.com/api/pincode");
+    const data = await response.json();
+    setPincodeDB(data);
+  };
+  const fetchRestaurant = async () => {
+    const response = await fetch("https://mosho.onrender.com/api/restaurant");
+    const data = await response.json();
+    setRestaurantAvailable(data.restaurantAvailable);
+  };
   useEffect(() => {
     userData();
+    fetchPincodes();
+    fetchRestaurant();
   }, []);
   const [pincode, setPincode] = useState("");
 
@@ -30,6 +45,53 @@ const Settings = () => {
     if (data.success) {
       toast.success(data.message);
       setPincode("");
+      setActivePage("menu");
+      setTimeout(() => {
+        setActivePage("settings");
+      }, 1);
+    } else {
+      toast.error(data.message);
+    }
+  };
+  const handleDeletePincode = async (index) => {
+    // Send a DELETE request to delete the pincode by index
+    const response = await fetch("https://mosho.onrender.com/api/deletepincode", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        index,
+      }),
+    });
+    const data = await response.json();
+
+    if (data.success) {
+      toast.success(data.message);
+      // Fetch updated pincodes after deletion
+      fetchPincodes();
+      setActivePage("menu");
+      setTimeout(() => {
+        setActivePage("settings");
+      }, 1);
+    } else {
+      toast.error(data.message);
+    }
+  };
+  const handleRestaurant = async () => {
+    const response = await fetch("https://mosho.onrender.com/api/doorrestaurant", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: restaurantAvailable,
+    });
+    const data = await response.json();
+
+    if (data.success) {
+      toast.success(data.message);
+      // Fetch updated pincodes after deletion
+      fetchPincodes();
+      setActivePage("menu");
+      setTimeout(() => {
+        setActivePage("settings");
+      }, 1);
     } else {
       toast.error(data.message);
     }
@@ -47,6 +109,15 @@ const Settings = () => {
           <div className="ml-4">
             <h1 className="text-3xl font-semibold">Hi, {localStorage.getItem("username")} </h1>
             <p className="text-gray-500 text-lg">{localStorage.getItem("role")} </p>
+            <button onClick={() => setRestaurantAvailable(false)} type="button" style={{ backgroundColor: "#ff492f" }} className="mr-3 my-4 px-2 py-3 text-white rounded-lg  focus:outline-none focus:ring">
+              Close Restaurant
+            </button>
+            <button onClick={() => setRestaurantAvailable(true)} type="button" className="mr-3 my-4 px-2 py-3 text-white bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring focus:bg-green-600">
+              Open Restaurant
+            </button>
+            <button onClick={handleRestaurant} type="button" className="mr-3 my-4 px-2 py-3 text-white bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring focus:bg-blue-600">
+              Confirm
+            </button>
           </div>
         </div>
       </div>
@@ -62,6 +133,21 @@ const Settings = () => {
             </button>
           </div>
         </form>
+      </div>
+      <div style={{ position: "absolute", right: "0px", top: "10%" }} className="h-screen w-96 border rounded-lg shadow-lg -my-4 ml-auto">
+        <h1 className="text-3xl font-bold text-center mb-5">Serviceable Pincodes</h1>
+        <div className="space-y-2">
+          {pincodeDB
+            ? pincodeDB.map((item, index) => (
+                <div key={index} className="flex justify-around items-center mb-3">
+                  <h3 className="text-lg font-bold ">code: {item}</h3>
+                  <button style={{ backgroundColor: "#ff492f", color: "#fff", padding: "4px 10px" }} onClick={() => handleDeletePincode(index)} className="text-white-800 hover:text-red-900 cursor-pointer">
+                    X
+                  </button>
+                </div>
+              ))
+            : null}
+        </div>
       </div>
       <ToastContainer />
     </>
