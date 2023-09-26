@@ -1,0 +1,85 @@
+@import url("https://fonts.googleapis.com/css2?family=Spectral:wght@400;600;700;800&family=Work+Sans:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: "Work Sans", sans-serif;
+}
+
+input[type="search"] {
+  background-color: transparent;
+  padding: 2px;
+  outline: none;
+  color: black;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+.delete_course_modal button:hover,
+.edit_course_modal button:hover {
+  background-color: var(--hover-effect);
+}
+.delete_course_modal {
+  background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  border-radius: 8px;
+  position: fixed;
+  top: 40%;
+  left: 40%;
+  width: 400px;
+  height: 200px;
+  text-align: center;
+  padding: 20px 10px;
+  display: none;
+  z-index: 9999999;
+}
+.edit_course_modal {
+  background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  border-radius: 8px;
+  position: fixed;
+  top: 5%;
+  left: 30%;
+  width: 400px;
+  /* height: ; */
+  text-align: center;
+  padding: 20px 10px;
+  display: none;
+  z-index: 9999999;
+  overflow-y: scroll;
+}
+.delete_course_modal_active,
+.edit_course_modal_active {
+  display: block;
+  z-index: 9999999;
+}
+.delete_course_modal p,
+.edit_course_modal p {
+  text-transform: capitalize;
+  font-weight: 500;
+  margin-bottom: 10px;
+  padding: 20px;
+}
+.delete_course_modal button,
+.edit_course_modal button {
+  padding: 10px 20px;
+  color: #fff;
+  background-color: var(--primary-color);
+  font-weight: 500;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+@media only screen and (max-width: 800px) {
+  .delete_course_modal,
+  .edit_course_modal {
+    left: 13%;
+    width: 280px;
+    height: 220px;
+    padding: 20px 10px;
+  }
+}
