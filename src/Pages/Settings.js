@@ -3,6 +3,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const Settings = ({ setActivePage }) => {
   const [restaurantAvailable, setRestaurantAvailable] = useState(true);
+  const [restaurantOpen, setRestaurantOpen] = useState(true);
   console.log(restaurantAvailable);
   const [pincodeDB, setPincodeDB] = useState();
   const userData = async () => {
@@ -22,7 +23,9 @@ const Settings = ({ setActivePage }) => {
   const fetchRestaurant = async () => {
     const response = await fetch("https://mosho.onrender.com/api/restaurant");
     const data = await response.json();
+    console.log("data", data);
     setRestaurantAvailable(data.restaurantAvailable);
+    setRestaurantOpen(data.restaurantAvailable);
   };
   useEffect(() => {
     userData();
@@ -77,17 +80,21 @@ const Settings = ({ setActivePage }) => {
     }
   };
   const handleRestaurant = async () => {
-    const response = await fetch("https://mosho.onrender.com/api/doorrestaurant", {
+    const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
       body: restaurantAvailable,
-    });
+    };
+    const response = await fetch("https://mosho.onrender.com/api/doorrestaurant", requestOptions);
     const data = await response.json();
 
     if (data.success) {
       toast.success(data.message);
-      // Fetch updated pincodes after deletion
-      fetchPincodes();
+      setRestaurantOpen(data.restaurantAvailable);
       setActivePage("menu");
       setTimeout(() => {
         setActivePage("settings");
@@ -109,6 +116,7 @@ const Settings = ({ setActivePage }) => {
           <div className="ml-4">
             <h1 className="text-3xl font-semibold">Hi, {localStorage.getItem("username")} </h1>
             <p className="text-gray-500 text-lg">{localStorage.getItem("role")} </p>
+            <p className="text-gray-500 text-lg">{restaurantOpen ? "Restaurant is Open" : " Restaurant is Close"} </p>
             <button onClick={() => setRestaurantAvailable(false)} type="button" style={{ backgroundColor: "#ff492f" }} className="mr-3 my-4 px-2 py-3 text-white rounded-lg  focus:outline-none focus:ring">
               Close Restaurant
             </button>
