@@ -167,6 +167,7 @@ const Settings = ({ setActivePage }) => {
               name="pincode"
               className="w-full px-4 py-4 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
               placeholder="Enter Pin Code"
+              minLength={3}
             />
           </div>
           <div className="mb-6">

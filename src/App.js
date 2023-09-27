@@ -22,7 +22,7 @@ const App = () => {
     if (activePage === "home") {
       return <Home />;
     } else if (activePage === "menu") {
-      return <Menu />;
+      return <Menu setActivePage={setActivePage} />;
     } else if (activePage === "customers") {
       return <Customers />;
     } else if (activePage === "orders") {
@@ -30,7 +30,11 @@ const App = () => {
     } else if (activePage === "settings") {
       return <Settings setActivePage={setActivePage} />;
     } else {
-      return localStorage.getItem("role") === "admin" ? <Home /> : <Login setActivePage={setActivePage} />;
+      return localStorage.getItem("role") === "admin" ? (
+        <Home />
+      ) : (
+        <Login setActivePage={setActivePage} />
+      );
     }
   };
 

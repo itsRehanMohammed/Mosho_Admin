@@ -60,14 +60,17 @@ const OrderDetails = ({ selectedOrder, setActivePage }) => {
       const updatedStatus = Status;
 
       async function updateStatus() {
-        const response = await fetch(`https://mosho.onrender.com/api/order/${selectedOrder._id}`, {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ delivery_status: updatedStatus }),
-        });
+        const response = await fetch(
+          `https://mosho.onrender.com/api/order/${selectedOrder._id}`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ delivery_status: updatedStatus }),
+          }
+        );
 
         const data = await response.json();
         if (data.success) {
@@ -120,7 +123,13 @@ const OrderDetails = ({ selectedOrder, setActivePage }) => {
               <span> Status: </span>
               <FormControl sx={{ m: 1, minWidth: 120 }}>
                 <InputLabel id="demo-simple-select-label">Status</InputLabel>
-                <Select labelId="demo-simple-select-label" id="demo-simple-select" value={selectedOrder.delivery_status} label="Status" onChange={handleChangeStatus}>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={selectedOrder.delivery_status}
+                  label="Status"
+                  onChange={handleChangeStatus}
+                >
                   {orderStatus.map((item) => {
                     return <MenuItem value={item.value}>{item.text}</MenuItem>;
                   })}
@@ -162,14 +171,17 @@ const Orders = ({ setActivePage }) => {
   const [orderClick, setOrderClick] = useState(false);
   const [Orders, setOrders] = useState([]);
 
-  const filteredOrders = localStatus === "" ? Orders : Orders.filter((order) => order.delivery_status === localStatus);
+  const filteredOrders =
+    localStatus === ""
+      ? Orders
+      : Orders.filter((order) => order.delivery_status === localStatus);
 
-  const fetchOrders = async () => {
-    const response = await fetch("https://mosho.onrender.com/api/orders");
-    const data = await response.json();
-    setOrders(data);
-  };
   useEffect(() => {
+    const fetchOrders = async () => {
+      const response = await fetch("https://mosho.onrender.com/api/orders");
+      const data = await response.json();
+      setOrders(data);
+    };
     fetchOrders();
   }, []);
   const handleOrderClick = (order) => {
@@ -181,20 +193,33 @@ const Orders = ({ setActivePage }) => {
       <div className="w-[90%] mx-auto">
         <h1 className="text-[35px] font-bold text-center mb-5">Orders</h1>
         <div className="flex flex-row justify-evenly items-center">
-          <button onClick={() => setLocalStatus("preparing")} className="border py-2 px-4 text-[#ff0202] bg-gray-100 rounded-xl shadow hover:bg-gray-50">
+          <button
+            onClick={() => setLocalStatus("preparing")}
+            className="border py-2 px-4 text-[#ff0202] bg-gray-100 rounded-xl shadow hover:bg-gray-50"
+          >
             Preparing
           </button>
-          <button onClick={() => setLocalStatus("out for delivery")} className="border py-2 px-4 text-[#ff0202] bg-gray-100 rounded-xl shadow hover:bg-gray-50">
+          <button
+            onClick={() => setLocalStatus("out for delivery")}
+            className="border py-2 px-4 text-[#ff0202] bg-gray-100 rounded-xl shadow hover:bg-gray-50"
+          >
             Out for Delivery
           </button>
-          <button onClick={() => setLocalStatus("delivered")} className="border py-2 px-4 text-[#ff0202] bg-gray-100 rounded-xl shadow hover:bg-gray-50">
+          <button
+            onClick={() => setLocalStatus("delivered")}
+            className="border py-2 px-4 text-[#ff0202] bg-gray-100 rounded-xl shadow hover:bg-gray-50"
+          >
             Delivered
           </button>
         </div>
         {filteredOrders.map((order, index) => (
           <div
             className={`flex flex-row items-center justify-between w-[90%] mx-auto border-2 
-                            ${localStatus === "ongoing" ? "border-red-200" : "border-green-200"} 
+                            ${
+                              localStatus === "ongoing"
+                                ? "border-red-200"
+                                : "border-green-200"
+                            } 
                             my-4 p-3 rounded-xl shadow-lg cursor-pointer hover:scale-[101%] transform ease-in-out`}
             key={index}
             onClick={() => {
@@ -211,12 +236,20 @@ const Orders = ({ setActivePage }) => {
               <h1 className="text-[20px] font-bold"> {order.order_price}₹ </h1>
               <span> {new Date(order.createdAt).toLocaleString()} </span>
 
-              <span className="bg-blue-100 p-2 rounded-xl"> {order.delivery_status} </span>
+              <span className="bg-blue-100 p-2 rounded-xl">
+                {" "}
+                {order.delivery_status}{" "}
+              </span>
             </div>
           </div>
         ))}
       </div>
-      {orderClick && <OrderDetails setActivePage={setActivePage} selectedOrder={selectedOrder} />}
+      {orderClick && (
+        <OrderDetails
+          setActivePage={setActivePage}
+          selectedOrder={selectedOrder}
+        />
+      )}
     </div>
   );
 };
