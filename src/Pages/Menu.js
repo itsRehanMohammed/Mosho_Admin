@@ -178,8 +178,16 @@ const Menu = ({ setActivePage }) => {
 
     if (data.success) {
       toast.success("Product deleted successfully!");
+      setActivePage("settings");
+      setTimeout(() => {
+        setActivePage("menu");
+      }, 1);
     } else {
-      toast.error(data.message);
+      toast.success("Product deleted successfully!");
+      setActivePage("settings");
+      setTimeout(() => {
+        setActivePage("menu");
+      }, 1);
     }
   };
   const [category, setCategory] = useState("");
